@@ -1,0 +1,11 @@
+<ul class="pagination pagination-sm pull-right">
+    {% if posts.has_previous %}
+        <li><a href="?page=1&kw={{ kw }}">首页</a></li>
+        <li><a href="?page={{ posts.previous_page_number }}&kw={{ kw }}">上一页</a></li>
+    {% endif %}
+    <li><span>第{{ posts.number }}页 共{{ posts.paginator.num_pages }}页</span></li>
+    {% if posts.has_next %}
+        <li><a href="?page={{ posts.next_page_number }}&kw={{ kw }}">下一页</a></li>
+        <li><a href="?page={{ posts.paginator.num_pages }}&kw={{ kw }}">尾页</a></li>
+    {% endif %}
+</ul>

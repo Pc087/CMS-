@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin Template">
+    <meta name="keywords" content="admin dashboard, admin, flat, flat ui, ui kit, app, web app, responsive">
+    <link rel="shortcut icon" href="{% static 'img/ico/favicon.png' %}">
+    <title>投诉处理系统- 注册</title>
+
+    <!-- Base Styles -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style-responsive.css' %}" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="{% static 'js/html5shiv.js' %}"></script>
+    <script src="{% static 'js/respond.min.js' %}"></script>
+    <![endif]-->
+</head>
+
+  <body class="login-body">
+
+      <div class="login-logo">
+          <img src="{% static 'img/login_logo.png' %}" alt=""/>
+      </div>
+
+      <h2 class="form-heading">现在注册</h2>
+      <div class="container log-row">
+          <form class="form-signin" action="{% url 'reg' %}" method="post">{% csrf_token %}
+              {{ form.username }}
+              {{ form.first_name }}
+              {{ form.email }}
+              {{ form.password }}
+              {{ form.re_password }}
+              <span>
+                  <label style="color: seashell">所属部门</label>
+                  {{ profile_form.department }}
+              </span>
+              {% csrf_token %}
+              <button class="btn btn-lg btn-success btn-block" type="submit">提交</button>
+              <div class="registration m-t-20 m-b-20">
+                  已有账号.
+                  <a class="" href="{% url 'login' %}">
+                      登录
+                  </a>
+              </div>
+          </form>
+      </div>
+
+    <!--jquery-1.10.2.min-->
+    <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+    <!--Bootstrap Js-->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  </body>
+</html>

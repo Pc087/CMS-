@@ -1,0 +1,111 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}
+    权限编辑
+{% endblock %}
+
+{% block css %}
+    <!--bootstrap-fileinput-master-->
+    <link rel="stylesheet" type="text/css" href="{% static 'js/bootstrap-fileinput-master/css/fileinput.css' %}" />
+{% endblock %}
+
+{% block main_title %}
+    权限编辑
+{% endblock %}
+
+{% block btn-group %}
+<div class="gal-tools">
+    <a href="{% url 'account_list' %}" ><i class="fa fa-rotate-left"></i> 返回列表</a>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="alert fade in alert-success" style="display: none" id="message_success">
+        <button data-dismiss="alert" class="close close-sm" type="button">
+            <i class="fa fa-times"></i>
+        </button>
+        <strong>资料保存成功!</strong>
+    </div>
+    <section class="panel">
+        <div class="panel-body">
+            <form class="form-horizontal" role="form" action="." method="post" enctype="multipart/form-data" id="myForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="department" class="col-lg-2 col-sm-2 control-label">部门</label>
+                    <div class="col-lg-10">
+                        {{ form.user }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="department" class="col-lg-2 col-sm-2 control-label">部门</label>
+                    <div class="col-lg-10">
+                        {{ form.department }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cpt_add" class="col-lg-2 col-sm-2 control-label">投诉新增</label>
+                    <div class="col-lg-1">
+                        {{ form.cpt_add }}
+                    </div>
+                    <label for="cpt_edit" class="col-lg-2 col-sm-2 control-label">投诉编辑</label>
+                    <div class="col-lg-1">
+                        {{ form.cpt_edit }}
+                    </div>
+                    <label for="cpt_delete" class="col-lg-2 col-sm-2 control-label">投诉删除</label>
+                    <div class="col-lg-1">
+                        {{ form.cpt_delete }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="driver_add" class="col-lg-2 col-sm-2 control-label">司机新增</label>
+                    <div class="col-lg-1">
+                        {{ form.driver_add }}
+                    </div>
+                    <label for="driver_edit" class="col-lg-2 col-sm-2 control-label">司机编辑</label>
+                    <div class="col-lg-1">
+                        {{ form.driver_edit }}
+                    </div>
+                    <label for="driver_delete" class="col-lg-2  col-sm-2 control-label">司机删除</label>
+                    <div class="col-lg-1">
+                        {{ form.driver_delete }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-offset-2 col-lg-10">
+                        <button type="button" class="btn btn-primary" onclick="submitData()">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}
+
+{% block script %}
+    <!--bootstrap-fileinput-master-->
+    <script type="text/javascript" src="{% static 'js/bootstrap-fileinput-master/js/fileinput.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/file-input-init.js' %}"></script>
+    <script src="https://cdn.bootcss.com/js-cookie/latest/js.cookie.min.js"></script>
+    <script>
+        function submitData(){
+            var csrftoken = Cookies.get('csrftoken');
+            var reqData = new FormData($("#myForm")[0]);
+            $.ajax({
+                method:'post',
+                url:'',
+                data: reqData,
+                processData: false,
+                contentType: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                },
+                success: function (data) {
+                    $('#message_success').show();
+                },
+                error: function () {
+                    alert('更新失败!')
+                }
+            })
+        }
+    </script>
+{% endblock %}

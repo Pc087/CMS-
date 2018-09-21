@@ -1,0 +1,120 @@
+{% extends 'layout.html' %}
+{% load complaint_tags %}
+
+{% block title %}
+账号管理中心
+{% endblock title %}
+
+{% block main_title %}
+账号列表
+{% endblock %}
+
+{% block btn-group %}
+    <div class="gal-tools">
+        <a href="{% url 'account_add' %}"><i class="fa fa-plus"></i> 新增 </a>
+        <a onclick="UserEdit()"><i class="fa fa-pencil"></i> 编辑 </a>
+        <a onclick="UserDel()"><i class="fa fa-trash"></i> 删除 </a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="panel">
+        <div class="panel-body">
+            <div class="row">
+                <table class="table table-striped custom-table table-hover">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th class="view-message">编号</th>
+                    <th class="view-message">用户名</th>
+                    <th class="view-message">投诉新增</th>
+                    <th class="view-message">投诉编辑</th>
+                    <th class="view-message">投诉删除</th>
+                    <th class="view-message">司机新增</th>
+                    <th class="view-message">司机编辑</th>
+                    <th class="view-message">司机删除</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in posts %}
+                <tr>
+                    <td class="inbox-small-cells">
+                        <label class="checkbox-custom check-success">
+                            <input type="checkbox" value="{{ user.id }}" id="{{ user.id }}">
+                            <label for="{{ user.id }}"> </label>
+                        </label>
+                    </td>
+                    <td class="view-message">{{ forloop.counter|counter:posts.number }}</td>
+                    <td class="view-message">{{ user.user.username }}</td>
+                    <td class="view-message">
+                        {% if user.cpt_add %}
+                            <span class="label label-success label-mini"><i class="fa fa-check"></i></span>
+                        {% else %}
+                            <span class="label label-danger label-mini"><i class="fa fa-times"></i></span>
+                        {% endif %}
+                    </td>
+                    <td class="view-message">
+                        {% if user.cpt_edit %}
+                            <span class="label label-success label-mini"><i class="fa fa-check"></i></span>
+                        {% else %}
+                            <span class="label label-danger label-mini"><i class="fa fa-times"></i></span>
+                        {% endif %}
+                    </td>
+                    <td class="view-message">
+                        {% if user.cpt_delete %}
+                            <span class="label label-success label-mini"><i class="fa fa-check"></i></span>
+                        {% else %}
+                            <span class="label label-danger label-mini"><i class="fa fa-times"></i></span>
+                        {% endif %}
+                    </td>
+                    <td class="view-message">
+                        {% if user.driver_add %}
+                            <span class="label label-success label-mini"><i class="fa fa-check"></i></span>
+                        {% else %}
+                            <span class="label label-danger label-mini"><i class="fa fa-times"></i></span>
+                        {% endif %}
+                    </td>
+                    <td class="view-message">
+                        {% if user.driver_edit %}
+                            <span class="label label-success label-mini"><i class="fa fa-check"></i></span>
+                        {% else %}
+                            <span class="label label-danger label-mini"><i class="fa fa-times"></i></span>
+                        {% endif %}
+                    </td>
+                    <td class="view-message">
+                        {% if user.driver_delete %}
+                            <span class="label label-success label-mini"><i class="fa fa-check"></i></span>
+                        {% else %}
+                            <span class="label label-danger label-mini"><i class="fa fa-times"></i></span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+            {% include 'pagination.html' %}
+        </div>
+    </section>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function UserEdit(){
+             var arr = [];
+             $('input[type="checkbox"]:checked').each(function () {
+                 arr.push($(this).val());
+             });
+             window.location.href='/account/detail/'+ arr[0];
+        }
+        function UserDel() {
+            var arr = [];
+             $('input[type="checkbox"]:checked').each(function () {
+                 arr.push($(this).val());
+             });
+            window.location.href='/account/delete/?id='+arr[0];
+        }
+    </script>
+{% endblock %}

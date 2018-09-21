@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}
+{{ posts.work_number }}
+{% endblock %}
+
+{% block driver_active %}active{% endblock %}
+
+{% block main_title %}
+    驾驶员{{ posts.name }} - 资料详情
+{% endblock %}
+
+{% block btn-group %}
+<div class="gal-tools">
+    {% if to_edit == 1 %}
+        <a type="button" onclick="sumbitData()"><i class="fa fa-save"></i> 保存</a>
+    {% endif %}
+    <a href="{% url 'driver_list' %}"><i class="fa fa-rotate-left"></i> 返回列表</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="alert fade in alert-success" style="display: none" id="message_success">
+    <button data-dismiss="alert" class="close close-sm" type="button">
+        <i class="fa fa-times"></i>
+    </button>
+    <strong>资料更新成功!</strong>
+</div>
+<section class="panel">
+    <div class="panel-body">
+        <div class="form">
+            <form class="cmxform form-horizontal tasi-form" id="myForm">
+                {% csrf_token %}
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">司机姓名</label>
+                    <div class="col-lg-10">
+                        {{ form.name }}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">服务监督号</label>
+                    <div class="col-lg-10">
+                        {{ form.work_number }}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">车牌号码</label>
+                    <div class="col-lg-10">
+                        {{ form.car_number }}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">联系方式</label>
+                    <div class="col-lg-10">
+                        {{ form.tel }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-2">所属车队</label>
+                    <div class="col-lg-10">
+                        {{ form.department }}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">交班情况</label>
+                    <div class="col-lg-10">
+                        {{ form.scheduling}}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">交班地点</label>
+                    <div class="col-lg-10">
+                        {{ form.place }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+
+    <script src="https://cdn.bootcss.com/js-cookie/latest/js.cookie.min.js"></script>
+    <script>
+        function sumbitData() {
+            var csrftoken = Cookies.get('csrftoken');
+            var reqData = new FormData($('#myForm')[0]);
+            $.ajax({
+                method:'post',
+                url:'',
+                data: reqData,
+                processData: false,
+                contentType: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                },
+                success: function (data) {
+                    $('#message_success').show();
+                },
+                error: function () {
+                    alert('更新失败!')
+                }
+            })
+        }
+    </script>
+{% endblock %}

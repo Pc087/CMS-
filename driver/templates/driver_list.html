@@ -1,0 +1,109 @@
+{% extends 'layout.html' %}
+{% load complaint_tags %}
+
+{% block title %}
+驾驶员列表
+{% endblock %}
+
+{% block main_title %}
+驾驶员列表
+{% endblock %}
+
+{% block driver_active %}active{% endblock %}
+
+{% block search %}
+<li>
+    <form class="search-content" action="{% url 'driver_search' %}" method="get">
+        <input type="text" class="form-control" name="kw" placeholder="搜索...">
+    </form>
+</li>
+{% endblock %}
+
+{% block btn-group %}
+    <div class="gal-tools">
+        {% if request.user.profile.driver_add %}
+            <a href="{% url 'driver_add' %}"><i class="fa fa-plus"></i> 新增 </a>
+        {% endif %}
+        {% if request.user.profile.driver_edit %}
+            <a onclick="driverEdit()"><i class="fa fa-pencil"></i> 编辑 </a>
+        {% endif %}
+        {% if request.user.profile.driver_delete %}
+            <a onclick="driverDel()"><i class="fa fa-trash"></i> 删除 </a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="panel panel-body">
+        <table class="table table-striped custom-table table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th> 编号</th>
+                <th>司机姓名</th>
+                <th>上岗证号</th>
+                <th>车牌号码</th>
+                <th>联系方式</th>
+                <th>值班情况</th>
+                <th>部门</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for driver in posts %}
+            <tr>
+                <td class="inbox-small-cells">
+                    <label class="checkbox-custom check-success">
+                        <input type="checkbox" value="{{ driver.work_number }}" id="{{ driver.work_number }}">
+                        <label for="{{ driver.work_number }}"> </label>
+                    </label>
+                </td>
+                <td>{{ forloop.counter|counter:posts.number }}</td>
+                <td>{{ driver.name }}</td>
+                <td><a href="{% url 'driver_detail' driver.work_number %}">{{ driver.work_number }}</a></td>
+                <td>{{ driver.car_number }}</td>
+                <td>
+                    {% if driver.tel %}
+                        {{ driver.tel }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if driver.scheduling %}
+                        {% if driver.scheduling == '1' %}
+                            白班
+                        {% elif driver.scheduling == '2' %}
+                            夜班
+                        {% else %}
+                            顶班
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td>{{ driver.department.name }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="panel panel-footer">
+        {% include 'pagination.html' %}
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function driverEdit(){
+             var arr = [];
+             $('input[type="checkbox"]:checked').each(function () {
+                 arr.push($(this).val());
+             });
+             window.location.href='/driver/detail/'+arr[0]+'/?to_edit=1';
+        }
+        function driverDel() {
+            var arr = [];
+             $('input[type="checkbox"]:checked').each(function () {
+                 arr.push($(this).val());
+             });
+             window.location.href='/driver/del/?worknum='+arr[0];
+        }
+    </script>
+{% endblock %}

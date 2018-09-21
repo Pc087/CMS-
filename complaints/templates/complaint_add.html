@@ -1,0 +1,211 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}
+    新增
+{% endblock %}
+
+{% block css %}
+    <!--iCheck-->
+    <link href="{% static 'js/icheck/skins/all.css' %}" rel="stylesheet">
+
+    <!--tagsinput-->
+    <link href="{% static 'css/tagsinput.css' %}" rel="stylesheet">
+
+    <!--dropzone-->
+    <link href="{% static 'css/dropzone.css' %}" rel="stylesheet">
+
+    <!--Select2-->
+    <link href="{% static 'css/select2.css' %}" rel="stylesheet">
+    <link href="{% static 'css/select2-bootstrap.css' %}" rel="stylesheet">
+
+    <!--bootstrap-touchspin-->
+    <link href="{% static 'css/bootstrap-touchspin.css' %}" rel="stylesheet">
+
+    <!--bootstrap picker-->
+    <link rel="stylesheet" type="text/css" href="{% static 'js/bootstrap-datepicker/css/datepicker.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'js/bootstrap-timepicker/compiled/timepicker.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'js/bootstrap-colorpicker/css/colorpicker.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'js/bootstrap-daterangepicker/daterangepicker-bs3.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'js/bootstrap-datetimepicker/css/datetimepicker.css' %}"/>
+{% endblock %}
+
+{% block complaint_active %}active{% endblock %}
+
+{% block main_title %}新增{% endblock %}
+
+{% block btn-group %}
+<div class="gal-tools">
+    <a type="button" onclick="sumbitData()"><i class="fa fa-save"></i> 保存</a>
+    <a type="button" href="{% url 'index' %}"><i class="fa fa-rotate-left"></i> 返回列表</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="alert fade in alert-success" style="display: none" id="message_success">
+    <button data-dismiss="alert" class="close close-sm" type="button">
+        <i class="fa fa-times"></i>
+    </button>
+    <strong>资料保存成功!</strong>
+</div>
+<section class="panel">
+    <div class="panel-body">
+        <div class="form">
+            <form class="cmxform form-horizontal tasi-form" id="myForm">
+                {% csrf_token %}
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">标题</label>
+                    <div class="col-lg-10">
+                        {{ form.title }}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">诉求类型</label>
+                    <div class="col-lg-4">
+                        {{ form.category }}
+                    </div>
+                    <label class="control-label col-lg-2">投诉编号</label>
+                    <div class="col-lg-4">
+                        {{ form.complaint_number }}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">受理日期</label>
+                    <div class="col-lg-4">
+                        {{ form.record_date }}
+                    </div>
+                    <label class="control-label col-lg-2">事发日期</label>
+                    <div class="col-lg-4">
+                        {{ form.happen_date }}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">投诉人</label>
+                    <div class="col-lg-4">
+                        {{ form.complainant}}
+                    </div>
+                    <label class="control-label col-lg-2">投诉人联系方式</label>
+                    <div class="col-lg-4">
+                        {{ form.tel }}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">当班司机</label>
+                    <div class="col-lg-8">
+                        {{ form.driver_name}}
+                    </div>
+                    <a class="col-lg-1 btn btn-success" onclick="addInfo()" href="#">加载资料</a>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-2">上岗证号</label>
+                    <div class="col-lg-4">
+                        {{ form.driver_work_number }}
+                    </div>
+                    <label class="control-label col-lg-2">联系方式</label>
+                    <div class="col-lg-4">
+                        {{ form.driver_tel }}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">投诉内容</label>
+                    <div class="col-lg-10">
+                        {{ form.content}}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="control-label col-lg-2">处理结果</label>
+                    <div class="col-lg-10">
+                        {{ form.feedback_content}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-2">是否完成</label>
+                    <div class="col-lg-4">
+                        {{ form.is_finished}}
+                    </div>
+                    <label class="control-label col-lg-2">转发部门</label>
+                    <div class="col-lg-4">
+                        {{ form.user }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <!--bootstrap picker-->
+    <script type="text/javascript" src="/static/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-daterangepicker/moment.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+    
+    <!--picker initialization-->
+    <script src="/static/js/picker-init.js"></script>
+    
+    <!--Icheck-->
+    <script src="/static/js/icheck/skins/icheck.min.js"></script>
+    <!--icheck init-->
+    <script src="/static/js/icheck-init.js"></script>
+    
+    <!--tags input-->
+    <script src="/static/js/tags-input.js"></script>
+    
+    <!--tags input init-->
+    <script src="/static/js/tags-input-init.js"></script>
+    
+    <!--bootstrap-inputmask-->
+    <script src="/static/js/bs-input-mask.min.js"></script>
+    
+    <!--touchspin spinner-->
+    <script src="/static/js/touchspin.js"></script>
+    
+    <!--spinner init-->
+    <script src="/static/js/spinner-init.js"></script>
+    
+    <!--dropzone-->
+    <script src="/static/js/dropzone.js"></script>
+    
+    <!--select2-->
+    <script src="/static/js/select2.js"></script>
+    <!--select2 init-->
+    <script src="/static/js/select2-init.js"></script>
+    
+    <script src="https://cdn.bootcss.com/js-cookie/latest/js.cookie.min.js"></script>
+    
+    <script>
+        function addInfo() {
+            var workNumber = prompt("请输入司机上岗证号");
+            $.get('/complaint/driverinfosearch/?cat='+workNumber, function (data) {
+                if(data['name']){
+                    $('#id_driver_tel').attr('value',data['tel']);
+                    $('#id_driver_name').attr('value',data['name']);
+                    $('#id_driver_work_number').attr('value',workNumber);
+                }else {
+                    alert('当前上岗证号不存在')
+                }
+            })
+        }
+        function sumbitData() {
+            var csrftoken = Cookies.get('csrftoken');
+            var reqData = $('#myForm').serialize();
+            $.ajax({
+                method:'post',
+                url:'/complaint/add/',
+                data: reqData,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                },
+                success: function (data) {
+                    $('#message_success').show();
+                },
+                error: function () {
+                    alert('更新失败!')
+                }
+            })
+        }
+    </script>
+{% endblock %}

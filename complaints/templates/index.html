@@ -1,0 +1,116 @@
+{% extends 'layout.html' %}
+{% load complaint_tags %}
+
+{% block title %}
+    {% if title == '投诉列表' %}
+        首页
+    {% else %}
+        {{ title }}
+    {% endif %}
+{% endblock %}
+
+{% block main_title %}
+{{ title }}
+{% endblock %}
+
+{% block search %}
+<li>
+    <form class="search-content" action="{% url 'all_search' %}" method="get">
+        <input type="text" class="form-control" name="kw" placeholder="搜索...">
+    </form>
+</li>
+{% endblock %}
+
+{% block btn-group %}
+<div class="gal-tools">
+    {% if request.user.profile.cpt_add %}
+        <a type="button" href="{% url 'complaint_add' %}"><i class="fa fa-plus"></i> 新增 </a>
+    {% endif %}
+    {% if request.user.profile.cpt_edit %}
+        <a type="button" onclick="cptEdit()" ><i class="fa fa-pencil"></i> 编辑 </a>
+    {% endif %}
+    {% if request.user.profile.cpt_delete %}
+        {% if title != '历史投诉' %}
+            <a type="button" onclick="cptDelete()"><i class="fa fa-trash"></i> 删除</a>
+        {% endif %}
+    {% endif %} 
+</div>
+{% endblock %}
+
+{% block content %}
+    <section class="panel">
+        <div class="panel-body">
+            <div class="row">
+                <table class="table table-striped custom-table table-hover">
+                <thead>
+                <tr>
+                    <th class="view-message"></th>
+                    <th class="view-message"><i class="fa fa-bookmark-o"></i>编号</th>
+                    <th class="view-message"><i class="fa fa-tags"></i> 类型</th>
+                    <th class="view-message"><i class="fa fa-file-text"></i> 工单编号</th>
+                    <th class="view-message">标题</th>
+                    <th class="view-message"><i class="fa fa-calendar"></i> 事发日期</th>
+                    <th class="view-message"><i class="fa fa-spinner"></i> 处理进度</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for complaint in posts %}
+                <tr>
+                    <td class="inbox-small-cells">
+                        <label class="checkbox-custom check-success">
+                            <input type="checkbox" value="{{ complaint.complaint_number }}" id="{{ complaint.complaint_number }}">
+                            <label for="{{ complaint.complaint_number }}"> </label>
+                        </label>
+                    </td>
+                    <td class="view-message">{{ forloop.counter|counter:posts.number }}</td>
+                    <td class="view-message">
+                        {% if complaint.category == '1' %}
+                            投诉
+                        {% elif complaint.category == '2' %}
+                            失物查找
+                        {% else %}
+                            其他
+                        {% endif %}
+                    </td>
+                    <td class="view-message"><a href="{% url 'complaint_detail' complaint.complaint_number %}">{{ complaint.complaint_number }}</a></td>
+                    <td class="view-message">{{ complaint.title|truncatechars:10 }}</td>
+                    <td class="view-message">{{ complaint.happen_date|date:"Y-m-d" }}</td>
+                    <td class="view-message">
+                        {% if complaint.is_finished %}
+                            <span class="label label-success label-mini">已处理</span>
+                        {% else %}
+                            <span class="label label-danger label-mini">未处理</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+            {% include 'pagination.html' %}
+        </div>
+    </section>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function cptEdit(){
+             var arr = [];
+             $('input[type="checkbox"]:checked').each(function () {
+                 arr.push($(this).val());
+             });
+             window.location.href='/complaint/detail/'+arr[0]+'/?to_edit=1';
+         }
+        function cptDelete(){
+            var arr= [];
+            $('input[type="checkbox"]:checked').each(function () {
+                arr.push($(this).val());
+            });
+            $.get('complaint/delete/',{id:arr[0]}, function (data) {
+                window.location.href='/'
+            })
+        }
+    </script>
+{% endblock %}
