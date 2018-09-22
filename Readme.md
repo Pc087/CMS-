@@ -47,7 +47,7 @@ def complaint_search(request):
     return render(request, 'index.html', locals())
 ```
 
-上面是开始的实现方案，虽然功能已经实现，但代码有些重复而且混乱，于是我定义了一个方法，利用字典表返回查询结果，在主函数用列表循环判断查询。
+解决方案：定义了一个方法，利用字典表返回查询结果，在主函数用列表循环判断查询。
 
 ```
 def query(item, kw):
