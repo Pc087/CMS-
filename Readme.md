@@ -155,7 +155,7 @@ def driver_list(request):
 ```
 class DriverListView(LoginRequiredMixin, ListView):
     template_name = 'driver_list.html'
-    context_object_name = 'posts'
+    context_object_name = 'obj'
     paginate_by = 10
 
     def get_queryset(self):
