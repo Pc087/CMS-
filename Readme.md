@@ -106,3 +106,69 @@ function cptEdit(){
      window.location.href='/complaint/detail/'+arr[0]+'/?to_edit=1';
  }
 ```
+
+## 代码优化
+本人是小白，编程一般思路是先正常实现功能，再优化代码以便日后维护。
+    
+### urls.py
+```
+urlpatterns = [
+    path('list/', views.DriverListView.as_view(), name='driver_list'),
+    path('detail/<work_number>/', views.DriverDetailView.as_view(), name='driver_detail'),
+    path('add/', AddView.as_view(form_class=DriverEditForm, template_name='driver_add.html'), name='driver_add'),
+    path('del/', views.driver_del, name='driver_del'),
+    path('search/', views.driver_search, name='driver_search'),
+]
+```
+
+### 列表视图
+
+#### 未修改前:
+```
+@login_required
+def driver_list(request):
+    """司机列表"""
+
+    # dpt获取当前用户部门
+    dpt = request.user.profile.department.name
+
+    # 构建字典表
+    departments = {
+        '西蜀': Driver.driver.xishu(),
+        '东吴': Driver.driver.dongwu(),
+        '北魏': Driver.driver.beiwei(),
+    }
+
+    # 判断用户权限等级
+    if request.user.is_superuser:
+        objects = Driver.driver.all()
+    else:
+        objects = departments.get(dpt)
+
+    # 分页
+    posts = get_pages(request, objects_list=objects)
+    return render(request, 'driver_list.html', locals())
+```
+
+#### 修改后:
+通过对Django帮助文档基于类视图的学习，将原代码进行修改，现在代码清晰多了。
+```
+class DriverListView(LoginRequiredMixin, ListView):
+    template_name = 'driver_list.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        # 构建字典表
+        departments = {
+            '西蜀': Driver.driver.xishu(),
+            '东吴': Driver.driver.dongwu(),
+            '北魏': Driver.driver.beiwei(),
+        }
+        dpt = self.request.user.profile.department.name
+        if self.request.user.is_superuser:
+            obj = Driver.driver.all()
+        else:
+            obj = departments.get(dpt)
+        return obj
+```
